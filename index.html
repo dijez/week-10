@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Logan Ipsum Generator</title>
+
+<style>
+  :root {
+    /* Palette 3 */
+    --mustard: #EDAE49;
+    --red: #D1495B;
+    --teal: #00798C;
+    --blue: #30638E;
+    --navy: #003D5B;
+
+    --panel-bg: #e7f1f3; /* faint teal tint */
+    --output-bg: #fcf5e8; /* faint mustard tint */
+  }
+
+  * {
+    box-sizing: border-box;
+    font-family: "Segoe UI", Roboto, sans-serif;
+  }
+
+  body {
+    margin: 0;
+    background: #ffffff;
+    color: var(--navy);
+  }
+
+  /* Top Bar */
+  header.topbar {
+    background: var(--navy);
+    color: white;
+    height: 40px;
+    padding: 0 16px;
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    border-bottom: 6px solid rgba(0, 0, 0, 0.25);
+  }
+
+  .wrap {
+    max-width: 1100px;
+    margin: 20px auto;
+    padding: 0 20px;
+  }
+
+  /* Form Panel */
+  .panel {
+    background: var(--panel-bg);
+    border: 2px solid var(--teal);
+    padding: 20px;
+    border-radius: 6px;
+  }
+
+  .title {
+    font-size: 16px;
+    margin-bottom: 15px;
+    color: var(--navy);
+    font-weight: 600;
+  }
+
+  .controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+  }
+
+  input[type="number"],
+  select {
+    padding: 7px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--blue);
+    background: white;
+    color: var(--navy);
+  }
+
+  /* Buttons */
+  .btn {
+    padding: 9px 14px;
+    background: var(--red);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+  }
+
+  .btn:hover {
+    background: var(--blue);
+  }
+
+  /* Output Box */
+  .output-wrap {
+    margin-top: 20px;
+    background: var(--output-bg);
+    border: 2px solid var(--mustard);
+    height: 480px;
+    overflow-y: auto;
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .generated {
+    font-size: 15px;
+    color: var(--navy);
+    line-height: 1.7;
+  }
+</style>
+</head>
+
+<body>
+
+<header class="topbar">Logan Ipsum Generator</header>
+
+<div class="wrap">
+  <div class="panel">
+    <p class="title">Logan Ipsum Generator</p>
+
+    <form id="genForm" onsubmit="return false;">
+      <div class="controls">
+        I need
+        <input id="count" type="number" min="1" value="1">
+
+        <select id="unit">
+          <option value="words">words</option>
+          <option value="sentences">sentences</option>
+          <option value="paragraphs">paragraphs</option>
+        </select>
+
+        of your <strong>Logan Broger.</strong>
+        <br>
+        <button id="genBtn" type="button" class="btn">Generate</button>
+      </div>
+    </form>
+
+    <div class="output-wrap">
+      <div id="output" class="generated"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const LOGAN_WORDS = [
+    "logan","broger","flux","tangent","vector","anchor","mirth","cinder",
+    "glint","cipher","quartz","signal","nimbus","atlas","prism","orbit",
+    "rivet","ember","verge","pulse","lumen","stride","meridian"
+  ];
+
+  function rand(max){ return Math.floor(Math.random()*max); }
+  function makeWord(){ return LOGAN_WORDS[rand(LOGAN_WORDS.length)]; }
+
+  function makeSentence(len = 6){
+    let w = [];
+    for(let i=0;i<len;i++) w.push(makeWord());
+    let s = w.join(" ");
+    return s.charAt(0).toUpperCase() + s.slice(1) + ".";
+  }
+
+  function makeParagraph(sentCount = 4){
+    let s = [];
+    for(let i=0;i<sentCount;i++){
+      s.push(makeSentence(5 + rand(7)));
+    }
+    return s.join(" ");
+  }
+
+  const output = document.getElementById("output");
+
+  function generate(){
+    const count = Math.max(1, parseInt(document.getElementById("count").value));
+    const unit = document.getElementById("unit").value;
+
+    let result = "";
+
+    if(unit === "words"){
+      let words = [];
+      for(let i=0;i<count;i++) words.push(makeWord());
+      result = words.join(" ");
+      result = result[0].toUpperCase() + result.slice(1) + ".";
+      output.textContent = result;
+    }
+
+    if(unit === "sentences"){
+      let sents = [];
+      for(let i=0;i<count;i++) sents.push(makeSentence());
+      output.textContent = sents.join(" ");
+    }
+
+    if(unit === "paragraphs"){
+      let paras = [];
+      for(let i=0;i<count;i++) paras.push(makeParagraph());
+      output.innerHTML = paras.map(p => `<p>${p}</p>`).join("");
+    }
+  }
+
+  document.getElementById("genBtn").addEventListener("click", generate);
+  window.addEventListener("load", generate);
+</script>
+
+</body>
+</html>
